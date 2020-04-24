@@ -24,6 +24,8 @@ public:
     void buttonPressed(QPushButton *);
     void turnIndicator();
     QString getChar();
+    void dda(float,float,float,float);
+    void floodFill(float, float, QRgb, QRgb);
     ~TicTacToe();
 
 private slots:
