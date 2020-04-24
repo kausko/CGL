@@ -2,6 +2,17 @@
 #include "ui_tictactoe.h"
 #include <QColorDialog>
 
+QImage image;
+
+template<class T>
+T sign(T x){
+    if(!x)
+        return 0;
+    if(x>0)
+        return 1;
+    return -1;
+}
+
 TicTacToe::TicTacToe(QWidget *parent): QMainWindow(parent), ui(new Ui::TicTacToe){
     moveCntr = 0;
     liveCntr = 0;
@@ -248,4 +259,35 @@ void TicTacToe::turnIndicator(){
         ui->turnIndicator->setText(p2+"'s turn");
     else
         ui->turnIndicator->setText(p1+"'s turn");
+}
+
+void TicTacToe::dda(float x1, float y1, float x2, float y2)
+{
+    QRgb value = qRgb(0,255,0);
+    float dx = x2-x1;
+    float dy = y2-y1;
+    float length = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+
+    float delx = dx/length;
+    float dely = dy/length;
+
+    float x = x1 + 0.5*sign(delx);
+    float y = y1 + 0.5*sign(dely);
+
+    for(int i=0; i<= length; i++){
+        image.setPixel(x,y,value);
+        x += delx;
+        y += dely;
+    }
+
+}
+
+void TicTacToe::floodFill(float x, float y, QRgb fillcolor, QRgb bgcolor){
+    if(image.pixel(x,y) == bgcolor){
+        image.setPixel(x,y,fillcolor);
+        floodFill(x+1,y,fillcolor,bgcolor);
+        floodFill(x,y+1,fillcolor,bgcolor);
+        floodFill(x-1,y,fillcolor,bgcolor);
+        floodFill(x,y-1,fillcolor,bgcolor);
+    }
 }
